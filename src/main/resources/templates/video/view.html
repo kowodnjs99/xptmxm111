@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{_layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<div layout:fragment="content" class="container mt-3">
+    <!-- 본문 내용 시작 -->
+    <h1>게시글 상세보기</h1>
+    <td th:text="${video?.writer?.nickname ?: '알 수 없음'}"></td>
+    <h2 th:text="${video.title}"></h2>
+
+    <p th:text="${video.content}"></p>
+
+    <!-- 유튜브 iframe -->
+    <div class="ratio ratio-16x9">
+        <iframe width="560" height="315"
+                th:src="@{'https://www.youtube.com/embed/' + ${video.youtubeUrl}}"
+                frameborder="0"
+                allowfullscreen>
+        </iframe>
+    </div>
+
+    <button id="likeBtn"
+            th:data-video-id="${video.id}">
+        ❤️ 좋아요
+    </button>
+
+    <span id="likeCount"
+          th:text="${video.likeCount}">0</span>
+
+
+    <br/>
+    <div>
+        <a th:href="@{'/video/sakje/' + ${video.id}}" class="btn btn-danger">삭제</a>
+        <a th:href="@{'/video/sujung/' + ${video.id}}" class="btn btn-secondary">수정</a>
+        <a href="/video/list" class="btn btn-secondary">목록</a>
+    </div>
+    <br/>
+
+    <h3 class="mt-4">댓글</h3>
+
+
+    <form action="/video/comment/add" method="post" class="mt-3">
+        <input type="hidden" name="videoId" th:value="${video.id}">
+        <input type="hidden" name="parentId" value="">
+
+        <textarea name="content" class="form-control" required></textarea>
+        <button class="btn btn-primary mt-2">댓글 등록</button>
+    </form>
+
+    <div th:if="${#lists.isEmpty(comments)}">
+        <p>등록된 댓글이 없습니다.</p>
+    </div>
+
+    <div style="margin-top: 20px;" id="comments">
+        <table class="table">
+            <tbody>
+            <tr th:each="comment : ${VideoComment}">
+                <td th:style="'padding-left:' + ${comment.depth * 20} + 'px'">
+
+                    <!-- 댓글 내용 -->
+                    <div class="form-control">
+                    <p th:text="${comment.content}"></p>
+                        <small th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></small>
+
+                        <form th:action="@{/video/comment/delete/{id}(id=${comment.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">X</button>
+                        </form>
+                            <a th:onclick="'toggleEdit(' + ${comment.id} + ')'"
+                               class="btn btn-sm btn-outline-secondary">수정</a>
+                    </div>
+
+                    <div th:id="'edit-form-' + ${comment.id}" style="display:none;">
+                        <form action="/video/comment/edit" method="post">
+                            <input type="hidden" name="commentId" th:value="${comment.id}">
+                            <input type="hidden" name="videoId" th:value="${video.id}">
+                            <textarea name="content" class="form-control" th:text="${comment.content}" required></textarea>
+                            <button class="btn btn-sm btn-primary mt-1">수정 완료</button>
+                        </form>
+                    </div>
+
+
+                    <!-- 대댓글 작성 폼 -->
+                    <form action="/video/comment/add" method="post" class="mt-2">
+                        <input type="hidden" name="videoId" th:value="${video.id}">
+                        <input type="hidden" name="parentId" th:value="${comment.id}">
+
+                        <textarea name="content"
+                                  class="form-control"
+                                  placeholder="답글을 입력하세요"
+                                  required></textarea>
+
+                        <button class="btn btn-sm btn-secondary mt-1">답글</button>
+                    </form>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+        function toggleReplyForm(commentId) {
+            const form = document.getElementById('reply-form-' + commentId);
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        }
+    </script>
+    <script>
+        function toggleEdit(id) {
+            const form = document.getElementById('edit-form-' + id);
+            form.style.display =
+                (form.style.display === 'none') ? 'block' : 'none';
+        }
+    </script>
+    <script>
+        document.getElementById("likeBtn").addEventListener("click", function () {
+            const videoId = this.dataset.videoId;
+
+            fetch(`/video/${videoId}/like`, {
+                method: "POST"
+                credentials: "include"
+
+            })
+            .then(res => res.json())
+            .then(data => {
+                const likeCount = document.getElementById("likeCount");
+                let count = parseInt(likeCount.innerText);
+
+                likeCount.innerText = data.liked ? count + 1 : count - 1;
+            })
+            .catch(() => alert("로그인이 필요합니다"));
+        });
+    </script>
+
+
+    <!-- 본문 내용 종료 -->
+</div>
+</html>

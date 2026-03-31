@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{_layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+
+<div layout:fragment="content" class="container mt-3">
+    <!-- 본문 내용 시작 -->
+    <h1 class="mb-4">영상 등록</h1>
+    <!-- th:object 로 videoDTO 바인딩 -->
+    <form th:action="@{/video/chugaProc}"
+          th:object="${videoDTO}"
+          method="post"
+          id="videoForm"
+          name="form">
+
+        <!-- ✅ 글로벌 에러 블럭을 폼 안으로 이동 -->
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+            <ul class="mb-0">
+                <li th:each="err : ${#fields.globalErrors()}"
+                    th:text="${err}">글로벌 에러</li>
+            </ul>
+        </div>
+        <!-- CSRF -->
+        <input type="hidden"
+               th:if="${_csrf != null}"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}"/>
+
+        <!-- 제목 -->
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text"
+                   id="title"
+                   class="form-control"
+                   th:field="*{title}"
+                   placeholder="영상 제목을 입력해 주세요">
+            <div class="text-danger small"
+                 th:if="${#fields.hasErrors('title')}"
+                 th:errors="*{title}">
+                제목 에러
+            </div>
+        </div>
+
+        <!-- 내용 -->
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea id="content"
+                      class="form-control"
+                      rows="5"
+                      th:field="*{content}"
+                      placeholder="영상에 대한 설명을 입력해 주세요"></textarea>
+            <div class="text-danger small"
+                 th:if="${#fields.hasErrors('content')}"
+                 th:errors="*{content}">
+                내용 에러
+            </div>
+        </div>
+
+        <!-- 유튜브 URL / ID -->
+        <div class="mb-3">
+            <label for="youtubeUrl" class="form-label">유튜브 주소 또는 ID</label>
+            <input type="text"
+                   id="youtubeUrl"
+                   class="form-control"
+                   th:field="*{youtubeUrl}"
+                   placeholder="예: https://www.youtube.com/watch?v=xxxx 또는 동영상 ID">
+            <div class="form-text">
+                전체 URL이나 동영상 ID만 입력해도 자동으로 처리됩니다.
+            </div>
+            <div class="text-danger small"
+                 th:if="${#fields.hasErrors('youtubeUrl')}"
+                 th:errors="*{youtubeUrl}">
+                유튜브 URL 에러
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">등록</button>
+            <a th:href="@{/video/list}" class="btn btn-secondary">목록</a>
+        </div>
+
+
+<!--        <div class="mt-4">-->
+<!--            &lt;!&ndash; 여기 네가 원하던 버튼 형태 &ndash;&gt;-->
+<!--            <button id="btn-save"-->
+<!--                    class="btn btn-secondary"-->
+<!--                    type="button"-->
+<!--                    onclick="save();">-->
+<!--                등록-->
+<!--            </button>-->
+
+<!--            <a th:href="@{/video/list}" class="btn btn-outline-secondary ms-2">목록</a>-->
+<!--        </div>-->
+    </form>
+
+    <script>
+        function save() {
+            if (confirm('등록할까요?')) {
+                // th:action 으로 이미 /video/chugaProc 로 설정되어 있으니
+                // action/method는 건드릴 필요 없이 submit만 호출
+                document.getElementById('videoForm').submit();
+            }
+        }
+    </script>
+<!-- 본문 내용 종료 -->
+</div>
+</html>

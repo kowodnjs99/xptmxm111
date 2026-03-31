@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{_layout/layout}">
+
+<div layout:fragment="content" class="container my-3">
+
+    <!-- 본문 내용 시작 -->
+    <h1>영상 목록</h1>
+
+    <!-- 🔍 영상 게시판 전용 검색바 -->
+    <form th:action="@{/video/list}" method="get" class="d-flex mb-3">
+        <input class="form-control me-2"
+               type="search"
+               name="keyword"
+               placeholder="제목으로 검색"
+               th:value="${keyword}">
+        <button class="btn btn-search" type="submit">검색</button>
+    </form>
+
+
+
+    <!-- 게시글 리스트 -->
+    <table class="table table-hover">
+        <!--        <table class="table">-->
+        <thead>
+
+        <tr>
+            <th>ID</th>
+            <th>제목</th>
+            <th>조회수</th>
+            <th>작성자</th>
+            <th>등록일</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        <!-- ✅ 데이터가 없을 때 -->
+            <tr th:if="${page.totalElements == 0}">
+                <td colspan="3" class="text-center">등록된 영상이 없습니다.</td>
+            </tr>
+
+            <!-- ✅ 데이터가 있을 때 -->
+            <tr th:each="video, stat : ${page.content}">
+                <td th:text="${video.id}"></td>
+                <td>
+                    <a th:href="@{/video/view/{id}(id=${video.id})}"
+                       th:text="${video.title}"></a>
+                </td>
+                <td th:text="${video.viewCount}"></td>
+                <td th:text="${video?.writer?.nickname ?: '알 수 없음'}"></td>
+                <td th:text="${#temporals.format(video.createdAt, 'yyyy-MM-dd')}"></td>
+            </tr>
+            <tr th:if="${page.totalElements == 0}">
+                <td colspan="3" class="text-center text-muted py-3">게시글이 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 여기 아래는 videoList 출력 테이블 -->
+    <a href="/video/chuga" class="btn btn-primary">영상 추가</a>
+
+    <!-- 페이징 -->
+    <nav th:if="${page.totalPages > 1}" aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+
+            <!-- 이전 -->
+            <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/video/list(page=${page.number - 1}, keyword=${keyword})}">
+                    이전
+                </a>
+            </li>
+
+            <!-- 페이지 번호들 -->
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                th:classappend="${i == page.number} ? 'active'">
+                <a class="page-link"
+                   th:text="${i + 1}"
+                   th:href="@{/video/list(page=${i}, keyword=${keyword})}">
+                    1
+                </a>
+            </li>
+
+            <!-- 다음 -->
+            <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/video/list(page=${page.number + 1}, keyword=${keyword})}">
+                    다음
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+
+</div>
+
+</html>

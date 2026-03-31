@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{_layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<div layout:fragment="content" class="container mt-3">
+    <!-- 본문 내용 시작 -->
+    <h1>게시글</h1>
+
+    <form name="form">
+        <input type="hidden" name="id" th:value="${video.id}">
+        <div>
+            <label>제목</label>
+            <span th:text="${video.title}"  name="title" class="form-control"></span>
+        </div>
+
+        <div>
+            <label>내용</label>
+            <span th:text="${video.content}" name="content" class="form-control"></span>
+        </div>
+
+        <div>
+            <label>YouTube URL</label>
+            <span name="youtubeUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=XXXX"
+                   th:text="${video.youtubeUrl}"></span>
+        </div>
+    </form>
+    <button id="btn-save" class="btn btn-secondary" type="button" onclick="save();">삭제</button>
+    <script>
+        function save() {
+            if (confirm('삭제할까요?')) {
+                document.form.action = "/video/sakjeProc";
+                document.form.method = "post";
+                document.form.submit();
+            }
+        }
+    </script>
+    <!-- 본문 내용 종료 -->
+</div>
+</html>

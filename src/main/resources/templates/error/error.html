@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{_layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<div layout:fragment="content" class="container mt-3">
+    <!-- 본문 내용 시작 -->
+    <h1>에러페이지</h1>
+
+    <div class="mb-3">
+        <label for="errorCode">에러코드:</label>
+        <span class="form-control" id="errorCode" th:text="${errorCode}"></span>
+    </div>
+    <div class="mb-3">
+        <label for="errorMsg">에러메시지:</label>
+        <span class="form-control" id="errorMsg" th:text="${errorMsg}"></span>
+    </div>
+
+    <a href="/" class="btn btn-secondary">메인으로</a>
+    <!-- 본문 내용 종료 -->
+</div>
+</html>

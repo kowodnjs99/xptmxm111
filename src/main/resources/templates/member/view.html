@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{_layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div layout:fragment="content" class="container mt-3">
+    <!-- 본문 내용 시작 -->
+    <h1>회원상세보기</h1>
+
+    <div class="mb-3">
+        <label for="username">username:</label>
+        <span class="form-control" id="username" th:text="${member.username}"></span>
+    </div>
+    <div class="mb-3">
+        <label for="nickname">nickname:</label>
+        <span class="form-control" id="nickname" th:text="${member.nickname}"></span>
+    </div>
+<!--    <div class="mb-3">-->
+<!--        <label for="password">password:</label>-->
+<!--        <span class="form-control" id="password" th:text="${member.password}"></span>-->
+<!--    </div>-->
+
+    <div class="mb-3">
+        <label for="email">email:</label>
+        <span class="form-control" id="email" th:text="${member.email}"></span>
+    </div>
+
+    <div class="mb-3">
+        <label for="role">role:</label>
+        <span class="form-control" id="role" th:text="${member.role}"></span>
+    </div>
+    <div class="mb-3">
+        <label for="createDate2">createDate:</label>
+        <span class="form-control" id="createDate2" th:text="${#temporals.format(member.createdAt, 'yyyy-MM-dd')}"></span><br>
+    </div>
+
+    <div class="mb-3">
+        <label for="updateDate">createDate:</label>
+        <span class="form-control" id="updateDate" th:text="${#temporals.format(member.updatedAt, 'yyyy-MM-dd')}"></span><br>
+    </div>
+
+    <div sec:authorize="hasRole('ROLE_ADMIN')">
+        <a href="/member/list" class="btn btn-secondary">목록</a>
+        <a href="/member/chuga" class="btn btn-secondary">등록</a>
+        <a th:href="@{|/member/sujung/${member.id}|}" class="btn btn-secondary">수정</a>
+        <a th:href="@{|/member/sakje/${member.id}|}" class="btn btn-secondary">삭제</a>
+    </div>
+    <div  sec:authorize="hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_BANNED')">
+        <a th:href="@{|/member/sujung/${member.id}|}" class="btn btn-secondary">정보 수정</a>
+        <a th:href="@{|/member/sakje/${member.id}|}" class="btn btn-secondary">회원 탈퇴</a>
+    </div>
+    <!-- 본문 내용 종료 -->
+</div>
+</html>

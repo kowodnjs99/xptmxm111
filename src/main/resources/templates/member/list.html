@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{_layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div layout:fragment="content" class="container my-3">
+    <!-- 본문 내용 시작 -->
+    <h1>회원목록</h1>
+    <form th:action="@{/member/roleUpdateForm}" method="post">
+        <input type="hidden"
+               th:if="${_csrf != null}"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}"/>
+
+        <table class="table table-hover">
+        <thead>
+        <tr>
+            <!-- ✅ 전체 선택 체크박스 -->
+            <th style="width: 5%; text-align: center;">
+                <input type="checkbox" id="checkAll">
+            </th>
+            <th>번호</th>
+            <th>유저 아이디</th>
+            <th>유저 닉네임</th>
+<!--            <th>유저 패스워드</th>-->
+            <th>이메일</th>
+            <th>권한</th>
+            <th>등록일</th>
+            <th>수정일</th>
+            <th>상세보기</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- ✅ 컨트롤러에서 넘긴 이름에 맞춰 주세요 (memberList / MemberList 중 하나로 통일) -->
+        <tr th:each="member, loop : ${MemberList}">
+            <td class="text-center">
+                <!-- ✅ 전체 선택에서 찾을 클래스 -->
+                <input type="checkbox" class="chk-member"
+                       name="memberIds" th:value="${member.id}">
+            </td>
+            <td th:text="${loop.index+1}"></td>
+            <td th:text="${member.username}"></td>
+            <td th:text="${member.nickname}"></td>
+<!--            <td th:text="${member.password}"></td>-->
+            <td th:text="${member.email}"></td>
+            <td th:text="${member.role}"></td>
+            <td th:text="${member.createdAt}"></td>
+            <td th:text="${member.updatedAt}"></td>
+<!--            <td th:text="${#temporals.format(member.createDate, 'yyyy-MM-dd')}"></td>-->
+<!--            <td th:text="${#temporals.format(member.updateDate, 'yyyy-MM-dd')}"></td>-->
+<!--            <td th:text="${#dates.format(member.createDate, 'yyyy-MM-dd')}"></td>-->
+<!--            <td th:text="${#dates.format(member.updateDate, 'yyyy-MM-dd')}"></td>-->
+            <td>
+                <a th:href="@{|/member/view/${member.id}|}">상세보기</a>
+            </td>
+
+        </tr>
+        <tr th:if="${#lists.isEmpty(MemberList)}">
+            <td colspan="5" class="text-center text-muted py-3">
+                등록된 회원이 없습니다.
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+    <button sec:authorize="hasRole('ROLE_ADMIN')" type="submit" class="btn btn-warning">
+        선택 회원 권한 변경
+    </button>
+        <!-- 페이징 -->
+        <nav th:if="${memberPage.totalPages > 1}"
+             aria-label="Member pagination">
+            <ul class="pagination justify-content-center">
+
+                <!-- 이전 -->
+                <li class="page-item"
+                    th:classappend="${memberPage.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/member/list(page=${memberPage.number - 1})}">
+                        이전
+                    </a>
+                </li>
+
+                <!-- 페이지 번호 -->
+                <li class="page-item"
+                    th:each="p : ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${p == memberPage.number + 1} ? 'active'">
+                    <a class="page-link"
+                       th:text="${p}"
+                       th:href="@{/member/list(page=${p - 1})}">1</a>
+                </li>
+
+                <!-- 다음 -->
+                <li class="page-item"
+                    th:classappend="${memberPage.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/member/list(page=${memberPage.number + 1})}">
+                        다음
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </form>
+    <a href="/member/chuga" class="btn btn-secondary">등록</a>
+
+    <!-- 본문 내용 종료 -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkAll = document.getElementById('checkAll');
+            const memberCheckboxes = document.querySelectorAll('.chk-member');
+
+            checkAll.addEventListener('change', function () {
+                memberCheckboxes.forEach(cb => cb.checked = this.checked);
+            });
+        });
+    </script>
+</div>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{_layout/layout}">
+
+<div layout:fragment="content" class="container mt-4">
+    <h2>선택 회원 권한 변경</h2>
+
+    <!-- 에러/메시지 출력 (선택) -->
+    <div th:if="${errorMsg}" class="alert alert-danger" th:text="${errorMsg}"></div>
+    <div th:if="${msg}" class="alert alert-success" th:text="${msg}"></div>
+
+    <form th:action="@{/member/roleUpdate}" method="post">
+        <!-- 🔒 CSRF -->
+        <input type="hidden"
+               th:if="${_csrf != null}"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}"/>
+
+        <!-- 선택된 회원들 목록 표시 + hidden memberIds -->
+        <table class="table table-bordered mt-3">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>아이디</th>
+                <th>이메일</th>
+                <th>현재 권한</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <!-- 권한 변경 시 다시 보내줄 hidden id -->
+                <input type="hidden" name="memberIds" th:value="${member.id}"/>
+
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.username}"></td>
+                <td th:text="${member.email}"></td>
+                <td th:text="${member.role}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 바꿀 권한 선택 -->
+        <div class="row mt-3">
+            <div class="col-auto">
+                <label for="roleType" class="col-form-label">변경할 권한</label>
+            </div>
+            <div class="col-auto">
+                <select id="roleType" name="roleType" class="form-select">
+                    <option value="USER">일반회원 (USER)</option>
+                    <option value="MANAGER">매니저 (MANAGER)</option>
+                    <option value="BANNED">정지 (BANNED)</option>
+                    <!-- ADMIN 은 보통 여기 안 넣는 게 안전함 -->
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">
+                    권한 변경 실행
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

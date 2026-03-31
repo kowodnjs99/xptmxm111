@@ -1,0 +1,115 @@
+/* 네비바 전체 배경/높이 */
+.my-navbar {
+    /* 진한 초록 단색 배경 */
+    background-color: darkgreen; /* 깔끔한 딥그린 */
+
+    padding-top: 0.25rem;
+    padding-bottom: 0.6rem;
+
+    /* 아래쪽에 살짝 라인만 */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+/* 링크도 같이 줄여주면 더 슬림 */
+.my-navbar .navbar-nav .nav-link {
+    padding: 0.25rem 0.7rem;
+}
+
+/* 브랜드(왼쪽 Main 글자) */
+.my-navbar .navbar-brand {
+    color: #ffffff;        /* 완전 흰색 */
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.my-navbar .navbar-brand:hover {
+    color: #e5e7eb;        /* 살짝 회색으로만 변화 */
+}
+
+/* 메뉴 공통 스타일 */
+.my-navbar .navbar-nav .nav-link {
+    color: #f9fafb;        /* 거의 흰색 */
+    font-weight: 500;
+    padding: 0.45rem 0.9rem;
+}
+
+/* 메뉴 hover 시 */
+.my-navbar .navbar-nav .nav-link:hover,
+.my-navbar .navbar-nav .nav-link:focus {
+    color: #ffffff;
+    background-color: rgba(15, 118, 110, 0.25); /* 초록 계열 반투명 배경 */
+    border-radius: 999px;                        /* 동글동글 알약 모양 */
+}
+
+/* 모바일 토글 버튼 테두리 */
+.my-navbar .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* 햄버거 아이콘을 흰색으로 보이게 */
+.my-navbar .navbar-toggler-icon {
+    filter: invert(1);
+}
+
+.my-navbar {
+    background: linear-gradient(90deg, green, darkgreen);
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+
+/* 네비바 안 검색창 폭 제한 */
+.my-navbar form.d-flex .form-control {
+    max-width: 220px;
+}
+
+/* 버튼 hover 색 조금 진하게 */
+.my-navbar .btn-outline-light:hover {
+    color: darkgreen;
+    background-color: #f9fafb;
+}
+
+/* 서브 검색바 전용 버튼 스타일 */
+.btn-search {
+    border: 1px solid #000000;      /* 검정 테두리 */
+    background-color: darkgreen;  /* 진한 초록 배경 */
+    color: #ffffff;                 /* 흰 글자 */
+}
+
+/* 마우스 올렸을 때 */
+.btn-search:hover {
+    background-color: green;      /* 살짝 밝은 초록 */
+    color: #ffffff;                 /* 여전히 흰 글자 */
+    border-color: #000000;          /* 테두리는 그대로 검정 */
+}
+
+.footer-green {
+    /* 진한 초록 단색 배경 */
+    background-color: darkgreen; /* 깔끔한 딥그린 */
+}
+
+/* 화면 전체 높이 계산용 */
+html, body {
+    height: 100%;
+}
+
+/* body 를 세로 flex 컨테이너로 */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 본문 영역은 가능한 만큼 꽉 채우기 */
+.page-content {
+    flex: 1 0 auto;
+}
+
+/* 풋터는 맨 아래에 고정 + 초록색 배경 */
+.my-footer {
+    flex-shrink: 0;
+    background-color: #047857;   /* 네비바랑 맞춰서 초록 */
+    color: #ffffff;
+}

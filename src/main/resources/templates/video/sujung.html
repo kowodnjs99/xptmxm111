@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{_layout/layout}">
+
+<div layout:fragment="content" class="container mt-4">
+
+    <h1 class="mb-4">영상 수정</h1>
+
+    <form th:action="@{/video/sujungProc}"
+          th:object="${videoDTO}"
+          method="post"
+          id="videoForm"
+          name="form">
+
+        <!-- id 숨겨서 같이 보냄 -->
+        <input type="hidden" th:field="*{id}"/>
+
+        <!-- CSRF (지금처럼 null check 해서 안전하게) -->
+        <input type="hidden"
+               th:if="${_csrf != null}"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}"/>
+
+        <!-- 제목 -->
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text"
+                   id="title"
+                   class="form-control"
+                   th:field="*{title}">
+            <div class="text-danger small"
+                 th:if="${#fields.hasErrors('title')}"
+                 th:errors="*{title}"></div>
+        </div>
+
+        <!-- 내용 -->
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea id="content"
+                      class="form-control"
+                      rows="5"
+                      th:field="*{content}"></textarea>
+            <div class="text-danger small"
+                 th:if="${#fields.hasErrors('content')}"
+                 th:errors="*{content}"></div>
+        </div>
+
+        <!-- 유튜브 URL / ID -->
+        <div class="mb-3">
+            <label for="youtubeUrl" class="form-label">유튜브 주소 또는 ID</label>
+            <input type="text"
+                   id="youtubeUrl"
+                   class="form-control"
+                   th:field="*{youtubeUrl}">
+            <div class="text-danger small"
+                 th:if="${#fields.hasErrors('youtubeUrl')}"
+                 th:errors="*{youtubeUrl}"></div>
+        </div>
+
+        <div class="mt-4">
+            <button id="btn-save"
+                    class="btn btn-secondary"
+                    type="button"
+                    onclick="save();">
+                수정 완료
+            </button>
+
+            <a th:href="@{/video/list}" class="btn btn-outline-secondary ms-2">목록</a>
+        </div>
+    </form>
+
+    <script>
+        function save() {
+            if (confirm('수정 내용을 저장할까요?')) {
+                document.getElementById('videoForm').submit();
+            }
+        }
+    </script>
+
+</div>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{_layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<div layout:fragment="content" class="container mt-3">
+    <!-- 본문 내용 시작 -->
+    <h1>탈퇴</h1>
+
+    <form name="form">
+        <input type="hidden" name="id" th:value="${member.id}">
+        <div class="mb-3">
+            <label for="nickname">닉네임</label>
+            <span type="text" class="form-control" id="nickname" name="nickname" th:text="${member.nickname}"></span>
+        </div>
+        <div class="mb-3">
+            <label for="email">이메일</label>
+            <span type="email" class="form-control" id="email" name="email"  th:text="${member.email}"></span>
+        </div>
+    </form>
+    <button id="btn-save" class="btn btn-secondary" type="button" onclick="save();">회원탈퇴</button>
+    <script>
+        function save() {
+            if (confirm('탈퇴할까요?')) {
+                document.form.action = "/member/sakjeProc";
+                document.form.method = "post";
+                document.form.submit();
+            }
+        }
+    </script>
+    <!-- 본문 내용 종료 -->
+</div>
+</html>

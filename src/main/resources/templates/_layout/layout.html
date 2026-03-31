@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thmeleaf.org/extras/spring-security">
+<meta charset="utf-8">
+
+<div th:replace="~{_layout/inc_head :: inc_head}"></div>
+
+<body>
+
+<div th:replace="~{_layout/inc_navbar :: inc_navbar}"></div>
+
+
+
+<!-- 기본 템플릿 안에 삽입될 내용 Start -->
+<div class="page-content">
+<th:block layout:fragment="content">
+
+
+</th:block>
+</div>
+<!-- 기본 템플릿 안에 삽입될 내용 End -->
+
+
+
+
+
+<div th:replace="~{_layout/inc_footer :: inc_footer}"></div>
+</body>
+</html>
